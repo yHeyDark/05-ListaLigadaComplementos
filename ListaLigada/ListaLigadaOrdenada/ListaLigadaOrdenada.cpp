@@ -31,7 +31,7 @@ void menu()
 	int op = 0;
 	while (op != 7) {
 		system("cls"); // somente no windows
-		cout << "Menu Lista Ligada";
+		cout << "Menu Lista Ligada ordenada";
 		cout << endl << endl;
 		cout << "1 - Inicializar Lista \n";
 		cout << "2 - Exibir quantidade de elementos \n";
@@ -112,42 +112,94 @@ void exibirElementos()
 	}
 }
 
-void inserirElemento()
-{
-	// aloca memoria dinamicamente para o novo elemento
+void inserirElemento() {
+
 	NO* novo = (NO*)malloc(sizeof(NO));
-	if (novo == NULL)
-	{
-		return;
+	if (novo == NULL) {
+		return; 
 	}
 
 	cout << "Digite o elemento: ";
 	cin >> novo->valor;
 	novo->prox = NULL;
 
-	if (primeiro == NULL)
-	{
-		primeiro = novo;
+	NO* atual = primeiro;
+	NO* anterior = NULL;
+
+	while (atual != NULL && atual->valor < novo->valor) {
+		anterior = atual;
+		atual = atual->prox;
 	}
-	else
-	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
-		}
-		aux->prox = novo;
+
+
+	if (atual != NULL && atual->valor == novo->valor) {
+		cout << "Erro: O elemento " << novo->valor << " ja existe na lista." << endl;
+		free(novo);
+		return;
+	}
+
+	if (anterior == NULL) {
+		novo->prox = primeiro; 
+		primeiro = novo;       
+	}
+	else {
+		anterior->prox = novo; 
+		novo->prox = atual;    
 	}
 }
 
 void excluirElemento()
 {
+	int numero;
+	cout << "Digite o numero a ser excluido: ";
+	cin >> numero;
 
+	NO* atual = primeiro;
+	NO* anterior = NULL;
+
+	while (atual != NULL && atual->valor < numero) {
+		anterior = atual;
+		atual = atual->prox;
+	}
+
+	if (atual == NULL || atual->valor > numero) {
+		cout << "elemento nao encontrado" << endl;
+		return;
+	}
+
+	if (anterior == NULL) {
+		primeiro = atual->prox;
+	}
+	else {
+		anterior->prox = atual->prox;
+	}
+
+	free(atual);
+	cout << "elemento excluido com sucesso" << endl;
 }
 
 void buscarElemento()
 {
+	int numero;
+	cout << "Digite o numero a ser buscado: ";
+	cin >> numero;
 
+	NO* aux = primeiro;
+
+	while (aux != NULL) {
+		if (aux->valor == numero) {
+			cout << "ENCONTRADO" << endl;
+			return;
+		}
+
+		if (aux->valor > numero) {
+			cout << "ELEMENTO NAO ENCONTRADO" << endl;
+			return;
+		}
+
+		aux = aux->prox;
+	}
+	cout << "ELEMENTO NAO ENCONTRADO" << endl;
 }
 
 
